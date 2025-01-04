@@ -3,17 +3,20 @@ import ollama
 from read_data import read_data
 import json 
 
-data = read_data("data/sklep_spozywczy.xlsx")
-
+data = read_data("data\store\sklep_spozywczy.xlsx")
+database = "sklep_spozywczy"
 client = chromadb.HttpClient(host='localhost', port=8000)
-collection = client.get_or_create_collection("sklep_spozywczy")
+
+#Remove database to avoid duplicated records
+client.delete_collection(database)
+collection = client.create_collection(database)
 
 # Calculate embeddings for the 'Produkt' column
 embeddings = []
 for ind, row in data.iterrows():
   produkt = row["Produkt"]
   kategoria = row["Kategoria produktu"]
-  data_to_emb = json.dumps({"produkt": produkt, "kategoria": kategoria})
+  data_to_emb = json.dumps({"produkt": produkt})
   print("Calculating embedding for", data_to_emb)
   response = ollama.embeddings(model="mxbai-embed-large", prompt=data_to_emb)
   embeddings.append(response["embedding"])

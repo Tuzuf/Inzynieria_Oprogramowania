@@ -4,3 +4,7 @@
 chroma_*
 chroma
 .DS_Store
+embeddings_db
+my_chroma_data
+chroma.log
+__pycache__
