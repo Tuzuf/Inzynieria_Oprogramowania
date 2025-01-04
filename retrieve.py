@@ -4,7 +4,7 @@ import json
 client = chromadb.HttpClient(host='localhost', port=8000)
 collection = client.get_or_create_collection("sklep_spozywczy2")
 
-prompt = "ryż"
+prompt = "Gdzie znajdę róża?"
 
 response = ollama.embeddings(
     prompt=prompt,

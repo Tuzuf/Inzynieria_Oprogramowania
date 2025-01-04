@@ -28,3 +28,7 @@ pip install -r requirements.txt
 
 calculate embeddings - liczy embeddingi i zapisuje je w bazie danych chroma
 retrieve - pozwala na promptowanie, zadawanie pytań modelowi
+
+Things to be fixed:
+
+Model can't work properly with polish words like róża
