@@ -1,4 +1,6 @@
+# dotenv environment variables file
 .env
+.env.test
 chroma_*
 chroma
 .DS_Store
