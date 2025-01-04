@@ -2,6 +2,8 @@
 
 # Wymagania
 
+Use below commands in order
+
 ## Windows
 
 python -m venv .venv
@@ -12,6 +14,10 @@ pip install -r requirements.txt
 chroma run --host localhost --port 8000 --path ./embeddings_db
 
 ollama pull mxbai-embed-large
+
+run calculate_embeddings.py
+
+streamlit run chat.py
 
 ## Linux
 
