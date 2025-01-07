@@ -15,7 +15,7 @@ except:
 #Create new collection
 collection = client.create_collection(database)
 
-# Calculate embeddings for the 'Produkt' column
+# Calculate embeddings for the 'Product' and 'Product Category' column
 embeddings = []
 for ind, row in data.iterrows():
   produkt = row["Product"]
