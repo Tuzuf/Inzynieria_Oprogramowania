@@ -36,9 +36,14 @@ pip install -r requirements.txt
 
 # Opis kodu
 
-calculate embeddings - liczy embeddingi i zapisuje je w bazie danych chroma
+## Opis funkcji
+
+### read_data.py
+
+### retrieve.py
+
 retrieve - pozwala na promptowanie, zadawanie pytań modelowi
 
-Things to be fixed:
+### calculate_embeddings.py
 
-Model can't work properly with polish words like róża
+calculate embeddings - liczy embeddingi i zapisuje je w bazie danych chroma
