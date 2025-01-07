@@ -20,7 +20,8 @@ embeddings = []
 for ind, row in data.iterrows():
   produkt = row["Product"]
   kategoria = row["Product Category"]
-  data_to_emb = json.dumps({"Product": produkt, "Product Category": kategoria})
+  aisle_name = row["Aisle Name"]
+  data_to_emb = json.dumps({"Product": produkt, "Product Category": kategoria, "Aisle Name":aisle_name})
   print("Calculating embedding for", data_to_emb)
   response = ollama.embeddings(model="mxbai-embed-large", prompt=data_to_emb)
   embeddings.append(response["embedding"])
