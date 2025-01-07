@@ -6,7 +6,7 @@ import pandas as pd
 
 # Initialize ChromaDB client
 client = chromadb.HttpClient(host='localhost', port=8000)
-collection = client.get_or_create_collection(name="sklep_spozywczy")
+collection = client.get_or_create_collection(name="Store_Inventory")
 
 st.title("Chat with Sklep Spożywczy")
 
