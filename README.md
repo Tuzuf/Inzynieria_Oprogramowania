@@ -13,9 +13,13 @@ pip install -r requirements.txt
 
 chroma run --host localhost --port 8000 --path ./embeddings_db
 
+Open new terminal window
+
+.venv\Scripts\activate
+
 ollama pull mxbai-embed-large
 
-run calculate_embeddings.py
+python calculate_embeddings.py
 
 streamlit run chat.py
 

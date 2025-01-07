@@ -2,9 +2,9 @@ import chromadb
 import ollama
 import json
 client = chromadb.HttpClient(host='localhost', port=8000)
-collection = client.get_or_create_collection("sklep_spozywczy2")
+collection = client.get_or_create_collection("Store_Inventory")
 
-prompt = "Gdzie znajdę róża?"
+prompt = "Where can i find bread?"
 
 response = ollama.embeddings(
     prompt=prompt,
@@ -20,4 +20,4 @@ documents = results['documents']
 
 parsed_documents = [json.loads(doc) for doc in documents[0]]
 for doc in parsed_documents:
-    print(f"Produkt: {doc['Produkt']}, Cena: {doc['Cena']}, Nazwa alejki: {doc['Nazwa alejki']}, Numer alejki: {doc['Numer alejki']}, Półka: {doc['Półka']}, Kategoria produktu: {doc['Kategoria produktu']}")
+    print(f"Product: {doc['Product']}, Price: {doc['Price']}, Aisle Name: {doc['Aisle Name']}, Aisle Number: {doc['Aisle Number']}, Shelf: {doc['Shelf']}, Product Category: {doc['Product Category']}")
