@@ -1,10 +1,18 @@
 # Instructions
 
+In order to make any changes configure vs studio and git using
+
+git config --global user.name "Your Name"
+git config --global user.email "youremail@yourdomain.com"
+
 # Wymagania
 
 Use below commands in order
 
 ## Windows
+
+Download on your PC:
+https://ollama.com/download
 
 python -m venv .venv
 .venv\Scripts\activate
