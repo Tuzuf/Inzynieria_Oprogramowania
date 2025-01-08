@@ -29,10 +29,15 @@ Open new terminal window
 
 ollama pull mxbai-embed-large
 
-
 python calculate_embeddings.py
 
+In order to use faster chat
+
 streamlit run chat.py
+
+Conversational like UI, its slower
+
+streamlit run chat_conversation.py
 
 ## Linux
 
