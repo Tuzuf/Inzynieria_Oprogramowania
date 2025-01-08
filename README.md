@@ -29,6 +29,7 @@ Open new terminal window
 
 ollama pull mxbai-embed-large
 
+
 python calculate_embeddings.py
 
 streamlit run chat.py
