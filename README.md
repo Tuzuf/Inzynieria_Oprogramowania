@@ -19,6 +19,8 @@ python -m venv .venv
 
 pip install -r requirements.txt
 
+python.exe -m pip install --upgrade 
+
 chroma run --host localhost --port 8000 --path ./embeddings_db
 
 Open new terminal window
@@ -26,6 +28,7 @@ Open new terminal window
 .venv\Scripts\activate
 
 ollama pull mxbai-embed-large
+
 
 python calculate_embeddings.py
 

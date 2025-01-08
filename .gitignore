@@ -8,3 +8,4 @@ embeddings_db
 my_chroma_data
 chroma.log
 __pycache__
+.venv
