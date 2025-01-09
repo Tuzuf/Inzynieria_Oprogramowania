@@ -1,3 +1,4 @@
+For more details check file Dokumentacja Chatbot.docx
 # Instructions
 
 In order to make any changes configure vs studio and git using
