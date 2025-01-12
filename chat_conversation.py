@@ -3,13 +3,28 @@ import chromadb
 import ollama
 import json
 import pandas as pd
+import re
+import unicodedata
+emoji = unicodedata.normalize("NFC", "🛒")
+
+
+
+# Function to validate input
+def is_valid_input(text):
+    if len(text) < 3:  # Too short
+        return False, "Query is too short. Please enter a more descriptive question."
+    if re.fullmatch(r"[a-zA-Z]{1,3}", text):  # Too short single-word nonsense
+        return False, "Query is too short. Use a complete sentence or phrase."
+    if re.search(r"(.)\1{4,}", text):  # Repeated characters
+        return False, "Query contains repeated characters or nonsense text."
+    return True, None
 
 # Initialize ChromaDB client
 client = chromadb.HttpClient(host='localhost', port=8000)
 collection = client.get_or_create_collection(name="Store_Inventory")
 
 # Title
-st.title("🛒 Chat with Store Bot")
+st.title(f"{emoji} Chat with Store Bot")
 
 # Sidebar instructions
 st.sidebar.title("Instructions")
@@ -29,7 +44,9 @@ for msg in st.session_state.conversation:
     if msg["role"] == "assistant":
         st.markdown(f"**Store Bot:** {msg['content']}")
     else:
-        st.markdown(f"**You:** {msg['content']}")
+        # Highlight user messages with bold and larger font size
+        st.markdown(f"<div style='font-size:1.2em; font-weight:bold;'>You: {msg['content']}</div>", unsafe_allow_html=True)
+
 
 # Input box for user query
 user_input = st.text_input("Type your message:")
@@ -46,58 +63,63 @@ def prevent_duplicate_response(query):
 # When the user clicks "Send"
 if st.button("Send"):
     if user_input.strip():
-        # Prevent duplicate responses
-        if prevent_duplicate_response(user_input):
-            st.warning("You already asked this question. Please try something different.")
+        # Validate the input
+        is_valid, error_message = is_valid_input(user_input)
+        if not is_valid:
+            st.warning(error_message)
         else:
-            # Add user query to conversation
-            st.session_state.conversation.append({"role": "user", "content": user_input})
+            # Prevent duplicate responses
+            if prevent_duplicate_response(user_input):
+                st.warning("You already asked this question. Please try something different.")
+            else:
+                # Add user query to conversation
+                st.session_state.conversation.append({"role": "user", "content": user_input})
 
-            try:
-                # Generate embedding for the query
-                response = ollama.embeddings(
-                    prompt=user_input,
-                    model="mxbai-embed-large"
-                )
+                try:
+                    # Generate embedding for the query
+                    response = ollama.embeddings(
+                        prompt=user_input,
+                        model="mxbai-embed-large"
+                    )
 
-                # Query ChromaDB
-                results = collection.query(
-                    query_embeddings=[response["embedding"]],
-                    n_results=3
-                )
+                    # Query ChromaDB
+                    results = collection.query(
+                        query_embeddings=[response["embedding"]],
+                        n_results=3
+                    )
 
-                # Parse documents
-                documents = results['documents']
-                if not documents or len(documents[0]) == 0:
-                    bot_reply = "I couldn't find any matching products. Please try a different query."
-                else:
-                    parsed_documents = []
-                    for doc in documents[0]:
-                        try:
-                            parsed_documents.append(json.loads(doc))
-                        except json.JSONDecodeError:
-                            pass  # Skip documents that cannot be parsed
-
-                    if not parsed_documents:
-                        bot_reply = "The product data seems to be incomplete or invalid."
+                    # Parse documents
+                    documents = results['documents']
+                    if not documents or len(documents[0]) == 0:
+                        bot_reply = "I couldn't find any matching products. Please try a different query."
                     else:
-                        # Generate response text
-                        bot_reply = "Here are some products I found:\n\n"
-                        for doc in parsed_documents:
-                            product_name = doc.get("Product", "Unknown Product")
-                            description = doc.get("Description", "No description available.")
-                            price = doc.get("Price", "Price not listed.")
-                            aisle_name = doc.get("Aisle Name", "Not available")
-                            aisle_number = doc.get("Aisle Number", "Not available")
-                            shelf = doc.get("Shelf", "Not available")
-                            product_category = doc.get("Product Category", "Not available")
+                        parsed_documents = []
+                        for doc in documents[0]:
+                            try:
+                                parsed_documents.append(json.loads(doc))
+                            except json.JSONDecodeError:
+                                pass  # Skip documents that cannot be parsed
 
-                            bot_reply += f"- **{product_name}**: (Price: {price}, {aisle_name}, {shelf}, Category: {product_category}, Aisle {aisle_number})\n"
+                        if not parsed_documents:
+                            bot_reply = "The product data seems to be incomplete or invalid."
+                        else:
+                            # Generate response text
+                            bot_reply = "Here are some products I found:\n\n"
+                            for doc in parsed_documents:
+                                product_name = doc.get("Product", "Unknown Product")
+                                description = doc.get("Description", "No description available.")
+                                price = doc.get("Price", "Price not listed.")
+                                aisle_name = doc.get("Aisle Name", "Not available")
+                                aisle_number = doc.get("Aisle Number", "Not available")
+                                shelf = doc.get("Shelf", "Not available")
+                                product_category = doc.get("Product Category", "Not available")
 
-            except Exception as e:
-                bot_reply = f"Oops! Something went wrong: {e}"
+                                bot_reply += f"- **{product_name}**: (Price: {price}, {aisle_name}, {shelf}, Category: {product_category}, Aisle {aisle_number})\n"
 
-            # Add bot reply to conversation
-            st.session_state.conversation.append({"role": "assistant", "content": bot_reply})
+                except Exception as e:
+                    bot_reply = f"Oops! Something went wrong: {e}"
+
+                # Add bot reply to conversation
+                st.session_state.conversation.append({"role": "assistant", "content": bot_reply})
     else:
         st.warning("Please enter a valid message.")
