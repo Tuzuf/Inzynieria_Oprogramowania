@@ -1,4 +1,4 @@
-For more details check file Dokumentacja Chatbot.docx
+Projekt chatbota wykonanny na przedmiot Inżynieria Oprogramowania.
 # Instructions
 
 In order to make any changes configure vs studio and git using
